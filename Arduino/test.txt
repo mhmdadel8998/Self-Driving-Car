@@ -1,0 +1,126 @@
+#define echoR 8 // attach pin D2 Arduino to pin Echo of HC-SR04
+#define trigR 9 //attach pin D3 Arduino to pin Trig of HC-SR04
+#define echoL 10 // attach pin D2 Arduino to pin Echo of HC-SR04
+#define trigL 11//attach pin D3 Arduino to pin Trig of HC-SR04
+
+const int pingPin = 7; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 6; // Echo Pin of Ultrasonic Sensor
+int ML1=2;
+int ML2=3;
+int MR2=4;
+int MR1=5;
+
+long duration; // variable for the duration of sound wave travel
+int distance;
+
+int ultrasonicL(){
+  // Clears the trigPin condition
+  digitalWrite(trigL, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigL, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigL, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoL, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("Distance left: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  }
+
+
+int ultrasonicR(){
+  // Clears the trigPin condition
+  digitalWrite(trigR, LOW);
+  delayMicroseconds(2);
+  // Sets the trigPin HIGH (ACTIVE) for 10 microseconds
+  digitalWrite(trigR, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigR, LOW);
+  // Reads the echoPin, returns the sound wave travel time in microseconds
+  duration = pulseIn(echoR, HIGH);
+  // Calculating the distance
+  distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+  // Displays the distance on the Serial Monitor
+  Serial.print("Distance right: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  }
+
+
+
+
+
+void setup() {
+  pinMode(trigR, OUTPUT); // Sets the right trigPin as an OUTPUT
+  pinMode(echoR, INPUT); // Sets the right echoPin as an INPUT
+  pinMode(trigL, OUTPUT); // Sets the left trigPin as an OUTPUT
+  pinMode(echoL, INPUT); // Sets the left echoPin as an INPUT
+  
+  pinMode(MR1,OUTPUT);
+  pinMode(MR2,OUTPUT);
+  pinMode(ML1,OUTPUT);
+  pinMode(ML2,OUTPUT);
+  
+  
+  Serial.begin(9600); // Starting Serial Terminal
+}
+
+int forward (){
+    digitalWrite (ML1,HIGH);
+    digitalWrite (ML2,LOW);
+    digitalWrite (MR1,HIGH);
+    digitalWrite (MR2,LOW);
+}
+//
+int stopmotors (){
+    digitalWrite (ML1,LOW);
+    digitalWrite (ML2,LOW);
+    digitalWrite (MR1,LOW);
+    digitalWrite (MR2,LOW);
+}
+int turnL (){
+    digitalWrite (ML1,LOW);
+    digitalWrite (ML2,HIGH);
+    digitalWrite (MR1,HIGH);
+    digitalWrite (MR2,LOW);
+}
+
+
+
+int turnR (){    
+    digitalWrite (ML1,HIGH);
+    digitalWrite (ML2,LOW);
+    digitalWrite (MR1,LOW);
+    digitalWrite (MR2,HIGH);
+}
+
+void loop() {
+  forward();  
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+  stopmotors();
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+  turnL();
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+  stopmotors();
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+  turnR();
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+  stopmotors();
+  ultrasonicL();
+  ultrasonicR();
+  delay(1000);
+}
